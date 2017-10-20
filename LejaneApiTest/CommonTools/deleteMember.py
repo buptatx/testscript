@@ -84,7 +84,7 @@ def main():
     entrance of delete lejanemember
     :return:
     """
-    mydeleter = MySqlExecuter("rm-2zeoeb8q7zcbsnw0fo.mysql.rds.aliyuncs.com", "lecanbo", "lecanbo@2015", "lecanbo")
+    mydeleter = MySqlExecuter("host", "user", "pwd", "db")
     mydeleter.deleteMember("15810537243")
 
     print "delete lejanemember info from sql done"
