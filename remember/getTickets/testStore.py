@@ -1,5 +1,6 @@
 #! -*- coding:utf-8 -*-
 
+import doLogin
 def analyse_single_result(res):
     res_list = res.split("|")
     idx = 1
@@ -8,10 +9,14 @@ def analyse_single_result(res):
         idx += 1
 
 def test_raw_input():
-    uName = my_raw_input("请输入账号")
-    uPwd = my_raw_input('请输入密码')
-    print uName
-    print uPwd
+    start_time = doLogin.my_raw_input("请输入出发时间（例：2018-01-10）：")
+    start_station = doLogin.my_raw_input("请输入起始站：").decode("gbk")
+    end_station = doLogin.my_raw_input("请输入终点站：").decode("gbk")
+
+    print start_time
+    print start_station
+    print end_station
+
 
 def my_raw_input(info):
     return raw_input(unicode(info,'utf-8').encode('gbk'))

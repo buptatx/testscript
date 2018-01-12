@@ -15,6 +15,12 @@ def my_raw_input(info):
     return raw_input(unicode(info, 'utf-8').encode('gbk'))
 
 
+class LoginException(Exception):
+    def __init__(self, message):
+        Exception.__init__(self)
+        self.message = message
+
+
 class DoLogin():
     def __init__(self):
         urllib3.disable_warnings()
@@ -22,6 +28,7 @@ class DoLogin():
         self.create_headers()
         self.session = requests.session()
         self.verify_image_path = "./img.jpg"
+        self.isLoginSuccess = False
 
     def create_headers(self):
         self.headers["Accept-Language"] = "zh-CN,zh;q=0.9,en;q=0.8"
@@ -83,6 +90,18 @@ class DoLogin():
         try:
             res = self.session.post(url=loginUrl, data=req_data, headers=self.headers, verify=False)
             assert res.status_code == 200, u"登录响应结果异常"
+            if "网络可能存在问题" in res.content:
+                raise LoginException(u"网络可能存在问题，请您重试一下！")
+            res_dict = json.loads(res.content)
+            assert "result_message" in res_dict, u"登录失败"
+            if res_dict["result_message"]:
+                self.isLoginSuccess = True
+                print u"登录成功"
+                print res.content
+            else:
+                print u"登录失败"
+        except LoginException as lee:
+            print lee.message
         except requests.ConnectionError as connect_error:
             print connect_error
         except requests.ConnectTimeout as connect_timeout_error:
@@ -92,17 +111,13 @@ class DoLogin():
         except requests.Timeout as timeout_error:
             print timeout_error
 
-        res_dict = json.loads(res.content)
-        assert "result_message" in res_dict, u"登录失败"
-        if res_dict["result_message"]:
-            print u"登录成功"
-            print res.content
-        else:
-            print u"登录失败"
+        with open("login_content.txt", "wb") as lcf:
+            lcf.write(res.content)
 
     def login_entrance(self):
         self.get_verify_img()
         self.check_and_login()
+        return self.isLoginSuccess, self.session
 
     def check_and_login(self):
         cap_sol = my_raw_input('请输入验证码位置，以","分割[例如2,5]:')
@@ -113,6 +128,7 @@ class DoLogin():
             self.do_login()
         else:
             print u"图片校验失败"
+            self.get_verify_img()
             self.check_and_login()
 
 if __name__ == "__main__":

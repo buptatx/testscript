@@ -1,28 +1,35 @@
 #! -*- coding:utf-8 -*-
 
-import json
 import requests
 
 
 class ShowMeTickets():
-    def __init__(self, sDate, fStation, tStation):
+    def __init__(self, session):
         self.query_ticket_url = "https://kyfw.12306.cn/otn/leftTicket/queryZ"
-        self.train_date = sDate
-        self.start_station = fStation
-        self.end_station = tStation
+        self.session = session
 
-    def query_ticket(self):
+    def query_ticket(self, train_date, start_station, end_station):
         #生成查询url
         query_list = []
-        query_list.append("?leftTicketDTO.train_date={}".format(self.train_date))
-        query_list.append("leftTicketDTO.from_station={}".format(self.start_station))
-        query_list.append("leftTicketDTO.to_station={}".format(self.end_station))
+        query_list.append("?leftTicketDTO.train_date={}".format(train_date))
+        query_list.append("leftTicketDTO.from_station={}".format(start_station))
+        query_list.append("leftTicketDTO.to_station={}".format(end_station))
         query_list.append("purpose_codes=ADULT")
 
         query_str = self.query_ticket_url + "&".join(query_list)
         print query_str
 
-        res = requests.get(query_str)
+        try:
+            res = self.session.get(query_str)
+        except requests.ConnectionError as connect_error:
+            print connect_error
+        except requests.ConnectTimeout as connect_timeout_error:
+            print connect_timeout_error
+        except requests.HTTPError as http_error:
+            print http_error
+        except requests.Timeout as timeout_error:
+            print timeout_error
+
         res.encoding="utf-8"
         res_json = res.json()
         self.analyse_ticket_query_result(res_json)
@@ -35,7 +42,7 @@ class ShowMeTickets():
             print item
 
 
-
 if __name__ == "__main__":
-    test = ShowMeTickets("2018-02-10", "BJP", "HFF")
-    test.query_ticket()
+    session = requests.session()
+    test = ShowMeTickets(session)
+    test.query_ticket("2018-02-10", "BJP", "HFF")
