@@ -80,8 +80,17 @@ class DoLogin():
         req_data["password"] = uPwd
         req_data["appid"] = "otn"
 
-        res = self.session.post(url=loginUrl, data=req_data, headers=self.headers, verify=False)
-        assert res.status_code == 200, u"登录响应结果异常"
+        try:
+            res = self.session.post(url=loginUrl, data=req_data, headers=self.headers, verify=False)
+            assert res.status_code == 200, u"登录响应结果异常"
+        except requests.ConnectionError as connect_error:
+            print connect_error
+        except requests.ConnectTimeout as connect_timeout_error:
+            print connect_timeout_error
+        except requests.HTTPError as http_error:
+            print http_error
+        except requests.Timeout as timeout_error:
+            print timeout_error
 
         res_dict = json.loads(res.content)
         assert "result_message" in res_dict, u"登录失败"
