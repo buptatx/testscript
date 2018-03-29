@@ -45,10 +45,8 @@ def data_clean(original):
     step_2 = re.sub("=".decode("utf-8"), "等于".decode("utf-8"), step_1)
     #将运算符*号转化为中文“乘以”
     step_3 = re.sub("\*".decode("utf-8"), "乘以".decode("utf-8"), step_2)
-    #将运算符^2号转化为中文“的平方根”
-    step_4 = re.sub("\*".decode("utf-8"), "乘以".decode("utf-8"), step_3)
     result = re.sub("[\s+\.\!\/_,$%(\"\']+|[——！，。？、~@#￥%……&（）]+".decode("utf8"), "".decode("utf8"),
-                    step_4)
+                    step_3)
 
     return number_normalize(result)
 
