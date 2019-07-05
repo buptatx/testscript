@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="contact_gzip:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/contact_gzip_jar</output-path>
+    <root id="archive" name="contact_gzip.jar">
+      <element id="module-output" name="contact_gzip" />
+      <element id="extracted-dir" path="D:/chrome_download/fastjson-1.2.56.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

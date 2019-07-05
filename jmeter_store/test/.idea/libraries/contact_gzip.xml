@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="contact_gzip">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../contact_gzip/out/artifacts/contact_gzip_jar/contact_gzip.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
